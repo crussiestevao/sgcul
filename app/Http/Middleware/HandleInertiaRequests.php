@@ -34,6 +34,9 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+
+            'logo'=> asset('images/logo/logoup.png'),
+            
         ];
     }
 }
