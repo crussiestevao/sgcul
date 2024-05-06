@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             "password" => \Hash::make(12345678),
         ]);
 
-        $armando->role()->attach($roles->pluck('id'));
+        $armando->roles()->attach($roles->pluck('id'));
 
         $joao = User::create([
             "name" => "Joao Faquira",
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             "password" => \Hash::make(12345678),
         ]);
 
-        $joao->role()->attach($roles->pluck('id'));
+        $joao->roles()->attach($roles->pluck('id'));
 
         $fernando = User::create([
             "name" => "fernando",
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        $fernando->role()->attach($roles->pluck('id'));
+        $fernando->roles()->attach($roles->pluck('id'));
 
 
         $crussi = User::create([
@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
             "password" => \Hash::make(12345678),
         ]);
 
-        $crussi->role()->attach($roles->pluck('id'));
+        $crussi->roles()->attach($roles->pluck('id'));
 
     }
 }
