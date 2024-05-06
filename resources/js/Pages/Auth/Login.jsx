@@ -95,5 +95,6 @@ export default function Login({ status, canResetPassword,logo }) {
             </form>
 
         </GuestLayout>
+        
     );
 }
