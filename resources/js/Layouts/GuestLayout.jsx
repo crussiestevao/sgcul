@@ -10,13 +10,13 @@ export default function Guest({ children, logo }) {
                     <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" logo={logo}/>
                 </Link>
             </div>
-
-            <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+            <div className="font-bold">
+            <h2>SISTEMA DE GESTAO DE COMBUSTIVEL</h2>
+            </div>
+            <div className="w-full sm:max-w-md mt-6 px-6 py-12  bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
                 {children}
             </div>
-            <div className="">
-            <h2>SISTEMA DE GESTAO DE COMBUSTIVEL-UNIVERSIDADE LICUNGO</h2>
-            </div>
+            
         </div>
     );
 }
