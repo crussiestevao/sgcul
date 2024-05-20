@@ -6,9 +6,10 @@ import {
     UserOutlined,
     VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Breadcrumb, Button, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Button, Dropdown, Layout, Menu, theme } from 'antd';
 import { router, useForm } from '@inertiajs/react';
 const { Header, Sider, Content } = Layout;
+
 
 const AuthenticatedLayout = ({ children, user, header, page }) => {
 
@@ -44,6 +45,10 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
         }
     }
 
+    const logout = async (data)=>{
+        router.post(route('logout'));
+    }
+
     return (
         <div style={{ height: '100vh' }}>
             <Layout style={{ height: '100%' }}>
@@ -55,13 +60,13 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                         className='mt-12'
                         theme="dark"
                         mode="inline"
-                        defaultSelectedKeys={()=>{
-                         return  route().current('user.create')? ['2'] : 
-                         route().current('product.create')? ["4"] :
-                         route().current('order.create')? ["5"] :
-                         route().current('categorie.create')? ["3"]:
-                          ['1']
-                          ;
+                        defaultSelectedKeys={() => {
+                            return route().current('user.create') ? ['2'] :
+                                route().current('product.create') ? ["4"] :
+                                    route().current('order.create') ? ["5"] :
+                                        route().current('categorie.create') ? ["3"] :
+                                            ['1']
+                                ;
                         }}
                         onClick={navegateTo}
                         items={[
@@ -99,6 +104,7 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                             padding: 0,
                             background: colorBgContainer,
                         }}
+                        className='flex justify-between'
                     >
                         <Button
                             type="text"
@@ -110,6 +116,12 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                                 height: 64,
                             }}
                         />
+                        <div className='pr-8'>
+                            <Button onClick={()=>logout()}>{
+                                user.name 
+                            } 
+                            </Button>
+                        </div>
                     </Header>
 
                     <Content
@@ -130,14 +142,14 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                             >
                                 <Breadcrumb.Item>Home</Breadcrumb.Item>
                                 <Breadcrumb.Item>{page}</Breadcrumb.Item>
-               
+
                             </Breadcrumb>
 
                             <p>{header}</p>
                         </div>
 
                         {children}
-                       
+
                     </Content>
                 </Layout>
             </Layout>

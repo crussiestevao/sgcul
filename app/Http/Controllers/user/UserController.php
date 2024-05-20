@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\role\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -17,8 +18,12 @@ class UserController extends Controller
 
           $users = User::all();
 
-          $roles = Role::all();
-
+          if (request()->user()->can('superadmin')) {
+               $roles = Role::all();
+          } else {
+               $roles = Role::where('slug','!=','super_admin')->get();
+          };
+          
           $data = compact("users", 'roles');
 
           return Inertia::render("User/User", $data);
@@ -40,5 +45,15 @@ class UserController extends Controller
           $users = User::all();
 
           return compact('users');
+     }
+
+     public function destroy($id){
+
+          $user = User::findOrfail($id);
+          $name = $user->name;
+
+          $user->delete();
+
+          return compact('name'); 
      }
 }
