@@ -29,6 +29,15 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
             case '2':
                 return router.get(route('user.create'));
                 break;
+            case '3':
+                return router.get(route('categorie.create'));
+                break;
+            case '4':
+                return router.get(route('product.create'));
+                break;
+            case "5":
+                return router.get(route('order.create'));
+                break;
 
             default:
                 break;
@@ -47,7 +56,12 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                         theme="dark"
                         mode="inline"
                         defaultSelectedKeys={()=>{
-                         return  route().current('user.create')? ['2'] : ["1"];
+                         return  route().current('user.create')? ['2'] : 
+                         route().current('product.create')? ["4"] :
+                         route().current('order.create')? ["5"] :
+                         route().current('categorie.create')? ["3"]:
+                          ['1']
+                          ;
                         }}
                         onClick={navegateTo}
                         items={[
@@ -64,7 +78,17 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                             {
                                 key: '3',
                                 icon: <UploadOutlined />,
-                                label: 'nav 3',
+                                label: 'Categorias',
+                            },
+                            {
+                                key: '4',
+                                icon: <UploadOutlined />,
+                                label: 'Produtos',
+                            },
+                            {
+                                key: '5',
+                                icon: <UploadOutlined />,
+                                label: 'Requisicao',
                             },
                         ]}
                     />
