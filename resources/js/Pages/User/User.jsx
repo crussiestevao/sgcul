@@ -153,7 +153,7 @@ export default function User(props) {
 
             <div className='mt-4'>
                 <Input.Search placeholder='Buscar usuario'allowClear className='mb-4' onChange={(e)=>searchUser(e.target.value)}/>
-                <Table columns={columns} dataSource={users} />
+                <Table columns={columns} dataSource={users} className='shadow'/>
             </div>
 
             <Modal key={'user_create'} className='bg-slate-100 rounded shadow' title="Criação de usuários e acessos" open={openCreation} onCancel={() => setOpenCreation(false)} width={1000}

@@ -139,9 +139,10 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                                 style={{
                                     margin: '16px 0',
                                 }}
+                                className='cursor-pointer'
                             >
                                 <Breadcrumb.Item>Home</Breadcrumb.Item>
-                                <Breadcrumb.Item>{page}</Breadcrumb.Item>
+                                <Breadcrumb.Item onClick={()=>router.get(route(route().current()))}>{page}</Breadcrumb.Item>
 
                             </Breadcrumb>
 
