@@ -8,6 +8,7 @@ Route::controller(OrdersController::class)->group(function () {
 
     Route::middleware("auth")->group(function () {
         Route::get("/requisicao", 'index' )->name("order.create");
+        Route::get('/requisicao/emissao', 'emit')->name('order.new')->can('local_admin');
     });
 
 });

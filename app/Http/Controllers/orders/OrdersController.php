@@ -11,4 +11,9 @@ class OrdersController extends Controller
     public function index(){
         return Inertia::render("Orders/Orders");
     }
+
+    public function emit(){
+
+        return Inertia::render("Orders/NewOrder");
+    }
 }

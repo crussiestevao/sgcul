@@ -37,6 +37,10 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                 return router.get(route('order.create'));
                 break;
 
+            case "6":
+                return router.get(route('stations.list'));
+                break;
+
             default:
                 break;
         }
@@ -60,9 +64,9 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                         defaultSelectedKeys={() => {
                             return route().current('user.create') ? ['2'] :
                                 route().current('product.create') ? ["4"] :
-                                    route().current('order.create') ? ["5"] :
+                                    route().current('order.create') || route().current('order.new') ? ["5"] :
                                         route().current('categorie.create') ? ["3"] :
-                                            ['1']
+                                            route().current('stations.list') ? ["6"] : ['1']
                                 ;
                         }}
                         onClick={navegateTo}
@@ -101,21 +105,22 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                                 label: 'Produtos',
                             },
                             {
+                                key: '6',
+                                icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
+                                </svg>
+                                ,
+                                label: 'Estações de serviço'
+                            },
+                            {
                                 key: '5',
                                 icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
                                 </svg>
                                 ,
                                 label: 'Requisição',
-                            },
-                            {
-                                key: '6',
-                                icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
-                                </svg>
-                                ,
-                                label: 'Fornecedores'
                             }
+
                         ]}
                     />
                 </Sider>
