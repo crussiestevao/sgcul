@@ -4,11 +4,12 @@ import {
 } from '@ant-design/icons';
 import { router, useForm } from '@inertiajs/react';
 import { Breadcrumb, Button, Layout, Menu, theme } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 const { Header, Sider, Content } = Layout;
 
 
 const AuthenticatedLayout = ({ children, user, header, page }) => {
+
 
     const [collapsed, setCollapsed] = useState(false);
     const {
@@ -50,6 +51,7 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
         router.post(route('logout'));
     }
 
+
     return (
         <div style={{ height: '100vh' }}>
             <Layout style={{ height: '100%' }}>
@@ -58,7 +60,7 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                         sgcul
                     </div>
                     <Menu
-                        className='mt-12'
+                        className='mt-12 w-25 text-lg'
                         theme="dark"
                         mode="inline"
                         defaultSelectedKeys={() => {
@@ -113,15 +115,35 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                                 label: 'Estações de serviço'
                             },
                             {
-                                key: '5',
+                                key: 'orders',
                                 icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
                                 </svg>
                                 ,
                                 label: 'Requisição',
+                                children: [
+                                    {
+                                        key: '6',
+                                        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
+                                        </svg>
+                                        ,
+                                        label: 'Emitir',
+                                    },
+                                    {
+                                        key: '5',
+                                        icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
+                                        </svg>
+                                        ,
+                                        label: 'Validar Requisição',
+                                    }
+                                ]
                             }
 
                         ]}
+                       
+                        
                     />
                 </Sider>
                 <Layout>
@@ -135,7 +157,10 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                         <Button
                             type="text"
                             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                            onClick={() => setCollapsed(!collapsed)}
+                            onClick={() => {
+                                localStorage.setItem('collapse', !collapsed);
+                                setCollapsed(!collapsed)
+                            }}
                             style={{
                                 fontSize: '16px',
                                 width: 64,

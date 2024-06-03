@@ -1,11 +1,13 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { Button, Col, Form, Input, Row, Select, Table } from 'antd';
+import { useState } from 'react';
 import { FaAddressCard } from 'react-icons/fa';
 
 
 export default function NewOrder(props) {
 
+    const [items, setItems]=useState([]);
     return (<>
         <AuthenticatedLayout
             user={props.auth.user}
@@ -30,7 +32,7 @@ export default function NewOrder(props) {
             <div className='shadow-lg bg-white mt-4 p-4'>
                 <Form layout='vertical'>
                     <Row gutter={12}>
-                        <Col xs={12}>
+                        <Col xs={10}>
                             <Form.Item label="Productos" name={'products'}>
                                 <Select placeholder="Productos">
                                     <Select.Option></Select.Option>
@@ -54,8 +56,25 @@ export default function NewOrder(props) {
                                     Adicionr Item
 
                                 </Button>
+
                             </Form.Item>
 
+                        </Col>
+
+                        <Col>
+                            <Form.Item label=" ">
+                                <Button className='flex gap-1 bg-green-400 text-white' disabled={items.length>0? false : true}>
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
+                                    </svg>
+
+
+                                    Emitir a requisição
+
+                                </Button>
+
+                            </Form.Item>
                         </Col>
 
                     </Row>
@@ -81,19 +100,6 @@ export default function NewOrder(props) {
 
             </div>
 
-            <div className='mt-4 p-4 flex justify-between'>
-                <p></p>
-                <Button className='flex gap-1 bg-green-400 text-white'>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
-                    </svg>
-
-
-                    Emitir a requisição
-
-                </Button>
-            </div>
 
         </AuthenticatedLayout>
     </>)

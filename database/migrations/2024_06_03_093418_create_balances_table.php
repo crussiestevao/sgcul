@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('credit', 10,2)->nullable();
             $table->decimal('debit', 10,2)->nullable();
             $table->decimal('init_balance', 10,2)->nullable();
+            $table->dateTime('validated_at')->nullable();
             $table->foreignId('station_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
         });
     }

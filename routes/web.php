@@ -24,6 +24,8 @@ Route::middleware('auth')->group(function () {
 
 Route::controller(StationController::class)->middleware('auth')->group(function(){
     Route::get('estacoes/de/abastecimentos', 'index')->name('stations.list')->can('local_admin');
+    Route::post('station/add/new', 'store')->name('station.add.new')->can('local_admin');
+    Route::get('station/{id}/balances', 'getBalances')->name('station.get.balances')->can('local_admin');
 });
 
 
