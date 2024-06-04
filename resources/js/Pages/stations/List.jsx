@@ -53,7 +53,7 @@ export default function Stations(props) {
                 {/* Left Side Content (65%) */}
                 <div className="w-8/12 bg-gray-100 p-4 border border-left">
                     {
-                        balances.length===0 ?
+                        balances.length === 0 ?
                             <Empty description="Nehum estacao selecionada" />
                             :
                             loading ? <Skeleton active />
@@ -74,6 +74,10 @@ export default function Stations(props) {
                                                 suffix="Mzn"
                                                 valueStyle={{ color: 'red', fontWeight: 'bold' }} />
                                         </div>
+                                    </div>
+                                    <div className="flex justify-between mt-3 mb-2">
+                                        <p></p>
+                                        <p className="underline text-blue-400 cursor-pointer">Saldo inicial ✒️ {balances[0].name}</p>
                                     </div>
                                     <h2 className="text-lg font-bold mb-4">Movementos</h2>
                                     <Table dataSource={[]} columns={[]} className="w-full" size="small" />
