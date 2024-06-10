@@ -10,6 +10,7 @@ Route::controller(OrdersController::class)->group(function () {
         Route::get("/requisicao", 'index' )->name("order.validation.area");
         Route::get('/requisicao/emissao', 'emit')->name('order.new')->can('local_admin');
         Route::post('order/add/new', 'store')->name('order.add.new')->can('local_admin');
+        Route::get('requisicao/{id}/print', 'print')->name('order.print')->can('local_admin');
     });
 
 });

@@ -42,7 +42,7 @@ export default function NewOrder(props) {
         delay(300);
         details['items'] = items;
         axios.post(route('order.add.new'), details).then((response) => {
-
+            window.open(route('order.print', 1), '_blank', 'width=800,height=500,top=200,left=200')
         }).catch((err)=>{
 
         });
@@ -76,6 +76,9 @@ export default function NewOrder(props) {
                         }
                     </Select>
                 </Form.Item>
+                <Form.Item label="Observação (Nota)" name={'notes'}>
+                    <Input.TextArea placeholder='Observação' allowClear />
+                </Form.Item>
             </Form>
 
             <div className='shadow-lg bg-white mt-4 p-4'>
@@ -95,7 +98,7 @@ export default function NewOrder(props) {
                         <Col xs={8}>
 
                             <Form.Item label="Quantidade" name={'quantity'} rules={[{ required: true, message: 'indique quantidade' }]}>
-                                <Input placeholder='Quantidade' allowClear minLength={1} min={1} />
+                                <Input type='number' placeholder='Quantidade' allowClear minLength={1} min={1} />
                             </Form.Item>
                         </Col>
                         <Col>

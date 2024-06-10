@@ -27,6 +27,7 @@ return new class extends Migration
             $table->decimal('unit_price',10,2)->nullable();
             $table->dateTime('expirity_date')->nullable();
             $table->dateTime('validated_at')->nullable();
+            $table->decimal('amount', 10,2)->nullable();
             $table->text('notes')->nullable();
             $table->foreignId('station_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             
