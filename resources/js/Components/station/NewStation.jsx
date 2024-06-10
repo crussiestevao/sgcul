@@ -28,7 +28,7 @@ export function AddNewStation({ open, setOpen, setDatasource }) {
         <Modal show={open} onClose={() => {
             setOpen(false)
         }}>
-            <p className='px-8 py-4 font-bold text-lg'>Adicionar Novo Producto</p>
+            <p className='px-8 py-4 font-bold text-lg'>Criar Nova Estacão</p>
             <Form className='mx-8 px-lg-4 py-4' layout='vertical' ref={formRef} onFinish={saveStation}>
                 <Form.Item label="Nome" name={'name'} rules={[{required:true, message:'Nome da bomba'}]}>
                     <Input type="name" allowClear placeholder="Nome da Bomba" />

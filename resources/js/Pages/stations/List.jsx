@@ -3,8 +3,10 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Button, Empty, Input, message, Skeleton, Statistic, Table } from "antd";
 import image from '../../images/station.jpg'
 import { AddNewStation } from "@/Components/station/NewStation";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import axios from "axios";
+import Payments from "@/Components/station/Payments";
+import Deposits from "@/Components/station/Deposits";
 
 export default function Stations(props) {
 
@@ -12,6 +14,13 @@ export default function Stations(props) {
     const [stations, setStations] = useState(props.stations);
     const [loading, setLoading] = useState(false);
     const [balances, setBalances] = useState([]);
+
+    //payments and deposits 
+
+    const [selectedStation, setSelectedStation]=useState();
+
+    const [payModal, setPayModal]=useState(false);
+    const [depositModal, setDepositModal]=useState(false);
 
 
     const getBalances = async (id) => {
@@ -77,7 +86,17 @@ export default function Stations(props) {
                                     </div>
                                     <div className="flex justify-between mt-3 mb-2">
                                         <p></p>
-                                        <p className="underline text-blue-400 cursor-pointer">Saldo inicial ✒️ {balances[0].name}</p>
+                                        <div className="flex gap-2">
+                                            <Button onClick={()=>setPayModal(true)}>
+                                                Pagamento
+                                            </Button>
+                                            <Button onClick={()=>setDepositModal(true)}>
+                                                Deposito
+                                            </Button>
+                                            <Button onClick={()=>{}}>
+                                                Saldo Anterior
+                                            </Button>
+                                        </div>
                                     </div>
                                     <h2 className="text-lg font-bold mb-4">Movementos</h2>
                                     <Table dataSource={[]} columns={[]} className="w-full" size="small" />
@@ -95,6 +114,7 @@ export default function Stations(props) {
                             stations?.map((item, index) => (
                                 <div onClick={() => {
                                     getBalances(item.id)
+                                    setSelectedStation(item);
                                 }}
                                     key={index}
                                     className="bg-white p-4 rounded shadow relative cursor-pointer ripple hover:shadow-lg">
@@ -103,7 +123,7 @@ export default function Stations(props) {
                                         alt="Cover"
                                         className="w-full h-32 object-cover rounded-t"
                                     />
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-white rounded-b">
+                                    <div className="absolute font-medium uppercase bottom-0 left-0 right-0 p-4 bg-white rounded-b">
                                         {item.name}
                                     </div>
                                 </div>
@@ -115,6 +135,8 @@ export default function Stations(props) {
             </div>
 
             <AddNewStation open={open} setOpen={setOpen} setDatasource={setStations} />
+            <Payments show={payModal} setShow={setPayModal} setBalances={setBalances} station={selectedStation}/>
+            <Deposits show={depositModal} setShow={setDepositModal} setBalances={setBalances} station={selectedStation}/>
 
         </AuthenticatedLayout>
     </>)

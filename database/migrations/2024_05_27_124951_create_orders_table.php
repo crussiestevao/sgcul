@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('order')->nullable()->unique();
+            $table->string('type')->nullable();
             $table->string('registration')->nullable();
             $table->decimal('balance', 10,2)->nullable();
             $table->decimal('credit', 10,2)->nullable();
