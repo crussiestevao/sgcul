@@ -7,9 +7,10 @@ use App\Models\items\OrderItem;
 use App\Models\order\Order;
 use App\Models\product\Product;
 use App\Models\station\Station;
-use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Storage;
 
 class OrdersController extends Controller
 {
@@ -38,7 +39,7 @@ class OrdersController extends Controller
 
         $order = new Order();
 
-        $order->order = $request->code ? $request->code : 'L.OR' + $count + '' + Carbon::now()->year();
+        $order->order = $request->code;
         $order->driver = $request->driver;
         $order->registration = $request->registration;
         $order->station_id = $stations->id;
@@ -95,6 +96,14 @@ class OrdersController extends Controller
 
     public function print($id)
     {
-        dd($id);
+        
+        $order = Order::find($id);
+
+        $data = compact('order');
+
+       $pdf = Pdf::loadView('thermal.index', $data);
+
+       return $pdf->stream('Requisicao.pdf');
     }
 }
+ 

@@ -42,7 +42,7 @@ export default function NewOrder(props) {
         delay(300);
         details['items'] = items;
         axios.post(route('order.add.new'), details).then((response) => {
-            window.open(route('order.print', 1), '_blank', 'width=800,height=500,top=200,left=200')
+            window.open(route('order.print', response.data.id), '_blank', 'width=800,height=500,top=200,left=200')
         }).catch((err)=>{
 
         });

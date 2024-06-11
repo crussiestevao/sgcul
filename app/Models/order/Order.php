@@ -2,6 +2,8 @@
 
 namespace App\Models\order;
 
+use App\Models\items\OrderItem;
+use App\Models\station\Station;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -48,4 +50,12 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+
+    public function items(){
+        return $this->hasMany(OrderItem::class, 'order_d');
+    }
+
+    public function station(){
+        return $this->belongsTo(Station::class, 'station_id');
+    }
 }

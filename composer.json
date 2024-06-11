@@ -6,10 +6,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "barryvdh/laravel-dompdf": "^2.0",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "nesbot/carbon": "^3.5",
         "staudenmeir/eloquent-has-many-deep": "^1.7",
         "tightenco/ziggy": "^2.0"
     },

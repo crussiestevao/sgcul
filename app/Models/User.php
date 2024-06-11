@@ -89,5 +89,14 @@ class User extends Authenticatable
         return $this->roles()->where('slug', $role)->exists();
     }
 
+    public function appLogo(){
+        $file = 'images/logo/logoup.png';
+        $path = public_path($file);
+        $data = file_get_contents($path); 
+
+        $type = pathinfo($file, PATHINFO_EXTENSION);
+        return 'data:image/' . $type . ';base64,' . base64_encode($data);
+    }
+
     
 }
