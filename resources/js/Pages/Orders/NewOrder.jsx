@@ -1,9 +1,10 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { Button, Col, Form, Input, Row, Select, Table } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Table, Modal, Flex, Spin, Space } from 'antd';
 import axios from 'axios';
 import { useRef, useState } from 'react';
 import { FaAddressCard } from 'react-icons/fa';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 
 export default function NewOrder(props) {
@@ -13,6 +14,8 @@ export default function NewOrder(props) {
     const [products, setProducts] = useState(props.products);
     const formRef1 = useRef(null);
     const formRef2 = useRef(null);
+
+    const [saving, setSaving] = useState(false);
 
     const delay = ms => new Promise(() => {
         return resolve => setTimeout(resolve, ms);
@@ -38,12 +41,17 @@ export default function NewOrder(props) {
     }
 
     const saveOrder = async () => {
+        setSaving(true);
         formRef1.current.submit(); // submit details
         delay(300);
         details['items'] = items;
         axios.post(route('order.add.new'), details).then((response) => {
+            formRef1.current.resetFields();
+            formRef2.current.resetFields();
+            setSaving(false);
+            setItems([]);
             window.open(route('order.print', response.data.id), '_blank', 'width=800,height=500,top=200,left=200')
-        }).catch((err)=>{
+        }).catch((err) => {
 
         });
     }
@@ -169,6 +177,13 @@ export default function NewOrder(props) {
 
             </div>
 
+            <Modal open={saving} footer={null}>
+                <Flex align="center" gap="middle">
+                    <p className="font-bold text-2xl">Aguarde....</p>
+                    <Space/>
+                    <Spin size="large" />
+                </Flex>
+            </Modal>
 
         </AuthenticatedLayout>
     </>)
