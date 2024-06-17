@@ -16,6 +16,34 @@
         }
     </style>
     <style type="text/css">
+        @page {
+            margin: 100px 25px;
+        }
+
+        header {
+            position: fixed;
+            top: -60px;
+            left: 0px;
+            right: 0px;
+            /*background-color: lightblue;*/
+            height: 50px;
+        }
+
+        footer {
+            position: fixed;
+            bottom: -60px;
+            left: 0px;
+            right: 0px;
+            /*background-color: lightblue; */
+            height: 50px;
+            display: inline-block;
+
+        }
+
+        footer .pagenum:before {
+            content: counter(page);
+        }
+
         * {
             padding: 0px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif font-family: 'merchant_copy_doublesizeRg';
@@ -77,6 +105,15 @@
             margin-right: 10px;
             /* Adjust the margin as needed */
         }
+
+        /**/
+        .flex-container {
+            width: 400px;
+            height: 100px;
+            border: 1px solid #c3c3c3;
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 
@@ -85,10 +122,12 @@
 @endphp
 
 <body>
+    <header>{{ config('app.name') }}</header>
     <p>
     <div style="margin-bottom: 10px; text-align:center">
         <img src="{{ $user->appLogo() }}" width="100px" height="80px" style="object-fit: scale-down;"><br>
-        <b style="font-size: 18px">Universidade Licungo</b><br>
+        <b style="font-size: 18px;text-transform: uppercase;">Extensão da Beira</b><br>
+        <b style="font-size: 15px">Departamento de Património e Logística</b></b><br>
         <b style="font-size: 15px">Sistema de Gestão de Combustivel</b><br>
         <b style="font-size: 14px">Requisição N° {{ $order->order }}</b>
     </div>
@@ -120,7 +159,7 @@
 
             <ul>
                 <li> <b>@lang('Para'): </b></li>
-                
+
                 <li> <b>@lang('Estação de serviço '): </b>
                     {{ $order->station->name }}</li>
                 <li>
@@ -133,13 +172,14 @@
     </div>
 
 
-    <div style="margin-top: 20px; margin-bottom: 10px">
+    <div style="margin-top: 40px; margin-bottom: 10px">
+
         <table>
             <thead>
                 <tr style="background-color:#172554; color:white; padding:10px">
                     <th>@lang('#')</th>
+                    <th>@lang('Categoria')</th>
                     <th>@lang('Produto')</th>
-                    <th>@lang('Preço')</th>
                     <th>@lang('Quantidade')</th>
                 </tr>
             </thead>
@@ -147,29 +187,48 @@
                 @foreach ($order->items as $item)
                     <tr>
                         <td>{{ $item->code }}</td>
+                        <td>{{ $item->product()->first()->category->name }}</td>
                         <td>{{ $item->name }}</td>
-                        <td>{{ $item->price }}</td>
                         <td>{{ $item->quantity }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+
         <div style=" float: right;">
             <b>@lang('Total'): </b>
             <span style="margin-right: 25px; font-weight:700">{{ number_format($order->amount, 2) }} Mzn</span>
         </div>
-        <p style="margin-top: 60px">@lang('Assinatura'): @lang('____________________________')</p>
+
+
     </div>
 
+    <section style="margin-bottom: 80px; margin-top: 40px">
 
+        <div style="width: 33%; float: left; text-align: left">
+            <p style="margin-top: 120px">@lang('____________________________')</br>
+                @lang('(Chefe do departamento)') </p>
 
-    <footer style="padding: 1rem; text-align: center; position: fixed; bottom: 0; width: 100%;">
-        <div style=" float: left;">
-            Processado por computador
         </div>
-        <div style="float: right;">
-            <span style="margin-right: 15px">{{ config('app.name') }} v1.0 Experimental</span>
+
+        <div style="width: 33%; float: right; text-align: right">
+
+            <p style="margin-top: 120px">@lang('____________________________')</br>
+                @lang('(Assinatura do Agennte)')</p>
+
         </div>
+    </section>
+
+  
+    <footer>
+        <div style="float: left">
+            <span style="margin-left: -240px">Processado por computador</span>
+        </div>
+        &nbsp;
+        <div style="float: right">
+            <span style="margin-right: -650px">{{ config('app.name') }} v1.0 Experimental</span>
+        </div>
+        <div class="pagenum-container">Page <span class="pagenum"></span></div>
     </footer>
 
 </body>

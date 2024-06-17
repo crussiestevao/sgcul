@@ -2,8 +2,11 @@
 
 namespace App\Models\items;
 
+use App\Models\order\Order;
+use App\Models\product\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * 
@@ -33,5 +36,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class OrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory, HasRelationships;
+
+    public function product(){
+        // return $this->belongsTo(Product::class, 'product_id');
+        return Product::whereId($this->product_d)->get();
+    }
+
+    public function order(){
+        return $this->belongsTo(Order::class, 'order_d');
+    }
+
+    public function category(){
+        return $this->hasManyDeepFromRelations($this->product(), (new Product())->category());
+    }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Models\product;
 
+use App\Models\categories\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * 
@@ -33,5 +35,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, HasRelationships;
+
+    public function category(){
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+
 }
