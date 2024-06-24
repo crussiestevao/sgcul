@@ -226,9 +226,9 @@
         </div>
         &nbsp;
         <div style="float: right">
-            <span style="margin-right: -650px">{{ config('app.name') }} v1.0 Experimental</span>
+            <span style="margin-right: -650px" >{{ config('app.name') }} v1.0 Experimental</span>
         </div>
-        <div class="pagenum-container">Page <span class="pagenum"></span></div>
+        <div class="pagenum-container">Pagina <span class="pagenum"></span></div>
     </footer>
 
 </body>
