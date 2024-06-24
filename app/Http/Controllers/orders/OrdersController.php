@@ -16,7 +16,11 @@ class OrdersController extends Controller
 {
     public function index()
     {
-        return Inertia::render("Orders/Orders");
+
+        $orders = Order::all();
+        $data = compact('orders');
+        
+        return Inertia::render("Orders/Orders", $data);
     }
 
     public function emit()

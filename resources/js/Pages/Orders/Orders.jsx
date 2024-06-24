@@ -1,3 +1,4 @@
+import OrderTablesList from '@/Components/orders/OrderTablesList';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { Button, Card, Statistic, Tabs } from 'antd';
@@ -6,39 +7,8 @@ import { useState } from 'react';
 import { FaAddressBook } from 'react-icons/fa';
 
 export default function Products(props) {
-
-    const dataSource = [
-        {
-          key: '1',
-          name: 'Mike',
-          age: 32,
-          address: '10 Downing Street',
-        },
-        {
-          key: '2',
-          name: 'John',
-          age: 42,
-          address: '10 Downing Street',
-        },
-      ];
       
-      const columns = [
-        {
-          title: 'Name',
-          dataIndex: 'name',
-          key: 'name',
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age',
-          key: 'age',
-        },
-        {
-          title: 'Address',
-          dataIndex: 'address',
-          key: 'address',
-        },
-      ];
+  const [orders, setOrder]=useState(props.orders);
 
     return (
         <AuthenticatedLayout
@@ -64,12 +34,12 @@ export default function Products(props) {
             <Tabs items={[{
                 key: '1',
                 label: 'Validados',
-                children: <Table dataSource={dataSource} columns={columns}/>
+                children: <OrderTablesList dataSource={orders}/>
             },
             {
                 key: '2',
                 label: 'Pendentes',
-                children: <Table dataSource={dataSource} columns={columns}/>
+                children: <OrderTablesList dataSource={orders}/>
             }]} />
 
         </AuthenticatedLayout>
