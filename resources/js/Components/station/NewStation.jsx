@@ -18,6 +18,7 @@ export function AddNewStation({ open, setOpen, setDatasource }) {
                     description: <><p>Estacao criada</p></>,
                 }
             )
+            formRef.current.resetFields();
             setDatasource(res.data)
         }).catch((err)=>{
 

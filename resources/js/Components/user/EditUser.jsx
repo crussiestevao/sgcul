@@ -12,9 +12,9 @@ export default function EditUser({ openEdit, setOpenEdit, selectedUser, props, s
         return text;
     }
 
-    const delay = ms => new Promise(() => {
-        return resolve => setTimeout(resolve, ms);
-    })
+    const delay = ms => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
 
     const onCloseAndEdit = async (data) => {
 
@@ -42,7 +42,7 @@ export default function EditUser({ openEdit, setOpenEdit, selectedUser, props, s
 
         if (openEdit===true) {
             setLoading(true);
-            delay(100).then(() => {
+            delay(700).then(() => {
                 setLoading(false);
             })
         }

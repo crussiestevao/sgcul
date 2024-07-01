@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\orders;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\order\OrderResourceCollection;
 use App\Models\items\OrderItem;
 use App\Models\order\Order;
 use App\Models\product\Product;
 use App\Models\station\Station;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Storage;
@@ -17,8 +19,18 @@ class OrdersController extends Controller
     public function index()
     {
 
-        $orders = Order::all();
-        $data = compact('orders');
+        $unvalidated_orders = new OrderResourceCollection(Order::whereValidatedAt(null)
+        ->orderBy('created_at', 'desc')
+        ->get()); 
+
+        $validated_orders = new OrderResourceCollection(Order::where('validated_at','<>', null)
+        ->orderBy('created_at', 'desc')
+        ->get()); 
+
+        $stations = Station::all();
+        $products = Product::all();
+        
+        $data = compact('validated_orders', 'unvalidated_orders','stations','products');
         
         return Inertia::render("Orders/Orders", $data);
     }
@@ -37,16 +49,21 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
 
+        
         $stations = Station::find($request->station);
 
-        $count = Order::count();
+        $counter = Order::query()
+        ->orderBy('created_at', 'desc')
+        ->get()->first()->id+1;
+
 
         $order = new Order();
 
-        $order->order = $request->code;
+        $order->order = $request->code? $request->code : 'RQ'.$counter.''.Carbon::now()->year;
         $order->driver = $request->driver;
         $order->registration = $request->registration;
         $order->station_id = $stations->id;
+
 
         $order->save();
 
@@ -57,7 +74,7 @@ class OrdersController extends Controller
             $product = Product::find($item['id']);
 
             $order_item = new OrderItem();
-            $order_item->order_d = $order->id;
+            $order_item->order_id = $order->id;
             $order_item->product_d = $product->id;
             $order_item->code = $product->code;
             $order_item->price = $product->price;
@@ -68,30 +85,9 @@ class OrdersController extends Controller
             $total_amount += $product->price * $item['quantity'];
         }
 
-        if ($stations->currentDebit() >= $total_amount) {
-
-            $new_value = $stations->currentDebit() - $total_amount;
-
-            $order->type = "debito";
-            $order->balance = $new_value;
-            $order->credit = $stations->currentCredit();
-            $order->debit = $stations->currentDebit();
-            $order->amount = $total_amount;
-            $order->notes = $request->notes;
-
-            $stations->createNewDebit($new_value);
-        } else {
-            $new_value = $stations->currentCredit() + $total_amount;
-
-            $order->type = "credito";
-            $order->balance = $new_value;
-            $order->credit = $stations->currentCredit();
-            $order->debit = $stations->currentDebit();
-            $order->amount = $total_amount;
-            $order->notes = $request->notes;
-
-            $stations->createNewCredit($new_value);
-        }
+        $order->amount = $total_amount;
+        $order->notes = $request->notes;
+       
 
         $order->save();
 
@@ -108,6 +104,55 @@ class OrdersController extends Controller
        $pdf = Pdf::loadView('thermal.index', $data);
 
        return $pdf->stream('Requisicao.pdf');
+    }
+
+    public function validateOne($id){
+        
+        $order = Order::find($id);
+
+       $stations = $order->station;
+       
+        if ($stations->currentDebit() >= floatval($order->amount)) {
+
+            $new_value = $stations->currentDebit() - floatval($order->amount);
+
+            $order->type = "debito";
+            $order->balance = $new_value;
+            $order->credit = $stations->currentCredit();
+            $order->debit = $stations->currentDebit();
+
+
+            $stations->createNewDebit($new_value);
+        } else {
+            $new_value = $stations->currentCredit() + floatval($order->amount);
+
+            $order->type = "credito";
+            $order->balance = $new_value;
+            $order->credit = $stations->currentCredit();
+            $order->debit = $stations->currentDebit();
+            
+            $stations->createNewCredit($new_value);
+        }
+        
+        $order->validated_at = now();
+        $order->save();
+
+        $data = Order::whereValidatedAt(null)
+        ->orderBy('created_at', 'desc')
+        ->get(); 
+
+        
+        return $data;
+    }
+
+    public function validateAll(){
+        dd('Accao perigosa por implememtar');
+    }
+
+    public function destroy($id){
+        $order = Order::find($id);
+        $order->delete();
+        return response()->json([], 200);
     }
 }
  

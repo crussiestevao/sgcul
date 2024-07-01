@@ -1,14 +1,16 @@
 import OrderTablesList from '@/Components/orders/OrderTablesList';
+import UnvalidatedOrderTablesList from '@/Components/orders/UnvalidatedOrderTablesList';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
 import { Button, Card, Statistic, Tabs } from 'antd';
 import { Space, Table, Tag } from 'antd';
 import { useState } from 'react';
-import { FaAddressBook } from 'react-icons/fa';
+import { FaAddressBook, FaCheckDouble, FaRegClipboard } from 'react-icons/fa';
 
 export default function Products(props) {
       
-  const [orders, setOrder]=useState(props.orders);
+  const [validated_orders, setValidated]=useState(props.validated_orders.data);
+  const [unvalidated_orders, setUnvalidated]=useState(props.unvalidated_orders.data);
 
     return (
         <AuthenticatedLayout
@@ -22,6 +24,7 @@ export default function Products(props) {
                 <Button className='flex gap-2' type='primary' 
                 onClick={()=>{
                     router.get(route('order.new'))
+                    
                 }}
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -33,13 +36,15 @@ export default function Products(props) {
 
             <Tabs items={[{
                 key: '1',
-                label: 'Validados',
-                children: <OrderTablesList dataSource={orders}/>
+                label:<p className='flex gap-1 text-base'><FaRegClipboard/>Operações Pendentes</p>,
+                children: <UnvalidatedOrderTablesList dataSource={unvalidated_orders} setDataSource={setUnvalidated}
+                 stations={props.stations} products={props.products}/>,
             },
             {
                 key: '2',
-                label: 'Pendentes',
-                children: <OrderTablesList dataSource={orders}/>
+                label: <p className='flex gap-1 text-base'><FaCheckDouble/> Validados</p>,
+                children: <OrderTablesList dataSource={validated_orders}/>,
+    
             }]} />
 
         </AuthenticatedLayout>

@@ -30,14 +30,14 @@ export default function AddProduct({ open, setOpen, datasource, setDataSource, c
                 }]}>
                     <Input allowClear placeholder="nome do producto" />
                 </Form.Item>
-                <Form.Item label="Categoria" name={'categories'} rules={[{
+                <Form.Item label="Categoria" name={'categorie'} rules={[{
                     required: true,
                     message: 'Indique uma categoria'
                 }]}>
                     <Select placeholder="Categoria">
                         {
                             categories?.map((item, index) => (
-                                <Select.Option key={index} value={item.value}>{item.name}</Select.Option>
+                                <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
                             ))
                         }
                     </Select>

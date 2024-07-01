@@ -13,7 +13,6 @@ export default function NewOrder(props) {
     const [details, setDetails] = useState()
     const [products, setProducts] = useState(props.products);
     const formRef1 = useRef(null);
-    const formRef2 = useRef(null);
 
     const [saving, setSaving] = useState(false);
 
@@ -21,7 +20,10 @@ export default function NewOrder(props) {
         return resolve => setTimeout(resolve, ms);
     })
 
-    const addItem = (data) => {
+    const addItem = () => {
+
+       const data = formRef1.current.getFieldsValue();
+
         const selected = props.products.find(item => item.id === data.product);
 
         data['code'] = selected.code;
@@ -31,28 +33,25 @@ export default function NewOrder(props) {
             ...items,
             data
         ]);
-        formRef2.current.resetFields();
-        formRef1.current.submit(); // submit details
+
         setProducts(props.products)
     }
 
-    const getOrderDetails = (data) => {
-        setDetails(data);
-    }
 
-    const saveOrder = async () => {
+    const saveOrder = async (data) => {
+
         setSaving(true);
-        formRef1.current.submit(); // submit details
         delay(300);
-        details['items'] = items;
-        axios.post(route('order.add.new'), details).then((response) => {
+
+        data['items'] = items;
+
+        axios.post(route('order.add.new'), data).then((response) => {
             formRef1.current.resetFields();
-            formRef2.current.resetFields();
             setSaving(false);
             setItems([]);
             window.open(route('order.print', response.data.id), '_blank', 'width=800,height=500,top=200,left=200')
         }).catch((err) => {
-
+            setSaving(false);
         });
     }
 
@@ -64,33 +63,32 @@ export default function NewOrder(props) {
         >
             <Head title="Nova Requisição" />
 
-            <Form layout='vertical' className='shadow p-4 bg-white' ref={formRef1} onFinish={getOrderDetails}>
-                <Form.Item label="Codigo da requisicao" name={'code'}>
-                    <Input placeholder='Opcional' allowClear />
-                </Form.Item>
+            <Form layout='vertical' ref={formRef1} onFinish={saveOrder}>
+                <div className='shadow p-4 bg-white'>
+                    <Form.Item label="Codigo da requisicao (Opcional)" name={'code'}>
+                        <Input placeholder='Opcional' allowClear />
+                    </Form.Item>
 
-                <Form.Item label="Motorista" name={'driver'}>
-                    <Input placeholder='Motorista' allowClear />
-                </Form.Item>
-                <Form.Item label="Matricula" name={'registration'}>
-                    <Input placeholder='Viatura' allowClear />
-                </Form.Item>
-                <Form.Item label="Estação" name={'station'} rules={[{ required: true, message: 'Selecione uma estação ' }]}>
-                    <Select placeholder="Estação" showSearch optionFilterProp='children'>
-                        {
-                            props.stations?.map((item, index) => (
-                                <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
-                            ))
-                        }
-                    </Select>
-                </Form.Item>
-                <Form.Item label="Observação (Nota)" name={'notes'}>
-                    <Input.TextArea placeholder='Observação' allowClear />
-                </Form.Item>
-            </Form>
-
-            <div className='shadow-lg bg-white mt-4 p-4'>
-                <Form layout='vertical' ref={formRef2} onFinish={addItem}>
+                    <Form.Item label="Motorista" name={'driver'} rules={[{ required: true, message: 'Indique o motorista' }]}>
+                        <Input placeholder='Motorista' allowClear />
+                    </Form.Item>
+                    <Form.Item label="Matricula" name={'registration'} rules={[{ required: true, message: 'Indique a matricula' }]}>
+                        <Input placeholder='Viatura' allowClear />
+                    </Form.Item>
+                    <Form.Item label="Estação" name={'station'} rules={[{ required: true, message: 'Selecione uma estação ' }]}>
+                        <Select placeholder="Estação" showSearch optionFilterProp='children' allowClear>
+                            {
+                                props.stations?.map((item, index) => (
+                                    <Select.Option key={index} value={item.id}>{item.name}</Select.Option>
+                                ))
+                            }
+                        </Select>
+                    </Form.Item>
+                    <Form.Item label="Observação (Nota)" name={'notes'}>
+                        <Input.TextArea placeholder='Observação' allowClear />
+                    </Form.Item>
+                </div>
+                <div className='shadow p-4 bg-white mt-4'>
                     <Row gutter={12}>
                         <Col xs={10}>
                             <Form.Item label="Productos" name={'product'} rules={[{ required: true, message: 'Selecione um producto' }]}>
@@ -111,7 +109,7 @@ export default function NewOrder(props) {
                         </Col>
                         <Col>
                             <Form.Item label=" ">
-                                <Button className='flex gap-1 bg-red-400 text-white' onClick={() => formRef2.current.submit()}>
+                                <Button className='flex gap-1 bg-red-400 text-white' onClick={() => addItem()}>
 
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -125,26 +123,25 @@ export default function NewOrder(props) {
 
                         </Col>
 
-                        <Col>
-                            <Form.Item label=" ">
-                                <Button className='flex gap-1 bg-green-400 text-white' disabled={items.length > 0 ? false : true}
-                                    onClick={() => saveOrder()}>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
-                                    </svg>
-
-
-                                    Emitir a requisição
-
-                                </Button>
-
-                            </Form.Item>
-                        </Col>
-
                     </Row>
-                </Form>
+                </div>
+            </Form>
 
+            <div className='shadow-lg bg-white mt-4 p-4'>
+                <div className='flex justify-between'>
+                    <p></p>
+                    <Button className='flex gap-1 bg-green-400 text-white mb-4' disabled={items.length > 0 ? false : true}
+                        onClick={() => formRef1.current.submit()}>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m9 9 6-6m0 0 6 6m-6-6v12a6 6 0 0 1-12 0v-3" />
+                        </svg>
+
+
+                        Emitir a requisição
+
+                    </Button>
+                </div>
                 <Table dataSource={items} columns={[
                     {
                         key: 'code',
@@ -174,13 +171,12 @@ export default function NewOrder(props) {
                         )
                     }
                 ]} />
-
             </div>
 
             <Modal open={saving} footer={null}>
                 <Flex align="center" gap="middle">
                     <p className="font-bold text-2xl">Aguarde....</p>
-                    <Space/>
+                    <Space />
                     <Spin size="large" />
                 </Flex>
             </Modal>

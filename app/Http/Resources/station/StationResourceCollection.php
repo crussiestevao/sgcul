@@ -21,7 +21,7 @@ class StationResourceCollection extends ResourceCollection
                'name'=>$station->name,
                'credit' => $station->currentCredit(),
                'debit'  => $station->currentDebit(),
-               'moviments' =>$station->orders
+               'moviments' =>$station->validatedOrders
             ];
         });
         return $data->toArray();

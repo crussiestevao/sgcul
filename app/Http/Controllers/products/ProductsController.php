@@ -23,12 +23,14 @@ class ProductsController extends Controller
     public function store(Request $request){
 
         $counter = Product::count()+1;
+        $category = Category::find($request->categorie);
 
         $prod = new Product();
         $prod->name = $request->name; 
         $prod->descriptions = $request->descriptions;
         $prod->price = $request->price;
         $prod->code = Str::upper(mb_substr($request->name, 0, 1)).''.$counter;
+        $prod->category()->associate($category);
         $prod->save();
 
         $products = Product::all();

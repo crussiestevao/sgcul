@@ -52,7 +52,7 @@ class Order extends Model
     use HasFactory;
 
     public function items(){
-        return $this->hasMany(OrderItem::class, 'order_d');
+        return $this->hasMany(OrderItem::class, 'order_id');
     }
 
     public function station(){

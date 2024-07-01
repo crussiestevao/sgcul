@@ -34,7 +34,12 @@ class Station extends Model
     use HasFactory;
 
     public function orders(){
-        return $this->hasMany(Order::class, 'station_id');
+        return $this->hasMany(Order::class, 'station_id')->orderBy('created_at', 'desc');
+    }
+
+    public function validatedOrders()
+    {
+        return $this->orders()->whereNotNull('validated_at');
     }
     
     public function balance()

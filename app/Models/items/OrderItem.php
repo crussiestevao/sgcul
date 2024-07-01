@@ -18,7 +18,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property string $name
  * @property string|null $quantity
  * @property string|null $price
- * @property int $order_d
+ * @property int $order_id
  * @property int $product_d
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|OrderItem newQuery()
@@ -44,7 +44,7 @@ class OrderItem extends Model
     }
 
     public function order(){
-        return $this->belongsTo(Order::class, 'order_d');
+        return $this->belongsTo(Order::class, 'order_id');
     }
 
     public function category(){

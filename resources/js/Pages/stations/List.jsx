@@ -7,6 +7,7 @@ import { Fragment, useState } from "react";
 import axios from "axios";
 import Payments from "@/Components/station/Payments";
 import Deposits from "@/Components/station/Deposits";
+import OrderTablesList from "@/Components/orders/OrderTablesList";
 
 export default function Stations(props) {
 
@@ -68,6 +69,7 @@ export default function Stations(props) {
                             loading ? <Skeleton active />
                                 :
                                 <div>
+                                    <p className="font-bold mb-4"> * {selectedStation?.name}</p>
                                     <div className="flex justify-between mb-4">
                                         {/* Debit card */}
                                         <div className="bg-white p-4 rounded shadow flex-grow">
@@ -99,7 +101,7 @@ export default function Stations(props) {
                                         </div>
                                     </div>
                                     <h2 className="text-lg font-bold mb-4">Movementos</h2>
-                                    <Table dataSource={[]} columns={[]} className="w-full" size="small" />
+                                    <OrderTablesList dataSource={balances[0]?.moviments}/>
                                 </div>
 
                     }

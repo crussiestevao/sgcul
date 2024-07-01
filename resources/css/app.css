@@ -25,3 +25,14 @@
     width: 200%;
     height: 200%;
   }
+
+  .ant-table
+  .ant-table-container
+  .ant-table-content
+  table
+  thead.ant-table-thead
+  .ant-table-cell {
+  background-color: #1677FF;
+  color: white;
+
+}
