@@ -14,7 +14,9 @@ export default function Payments({ show, setShow, setBalances, station }) {
 
         data['station'] = station.id;
         await axios.post(route('station.make.payment'), data).then((response) => {
-
+            setBalances(response.data.station);
+            formRef.current.resetFields();
+            message.success('Feito com sucesso')
         }).catch((err) => {
             api.open({
                 message: err.response.data.message,

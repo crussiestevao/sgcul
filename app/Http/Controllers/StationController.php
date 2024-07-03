@@ -45,7 +45,15 @@ class StationController extends Controller
     {
         $station = Station::find($request->station);
         abort_if(!$station->hasCredit(), Response::HTTP_FORBIDDEN, 'Nao tem dividas nessa Estacão');
-        
+
+        if ($station->currentCredit()>=floatVal($request->total)) {
+           $amount = $station->currentCredit()-floatVal($request->total);
+
+           $station->createNewCredit($amount);
+
+           $data = $this->getBalances($station->id);
+           return $data;
+        }
     }
 
     public function makeDeposits(Request $request)

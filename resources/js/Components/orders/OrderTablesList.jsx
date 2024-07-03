@@ -3,6 +3,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { FaEyeSlash } from 'react-icons/fa';
+import OrderDetails from './OrderDetails';
 
 
 
@@ -11,6 +12,12 @@ export default function OrderTablesList({ dataSource }) {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
+
+    const [show, setShow]=useState(false);
+
+    const [selected, setSelected]=useState(null);
+
+
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -189,10 +196,13 @@ export default function OrderTablesList({ dataSource }) {
         {
             title: 'Detalhes ?',
             key: 'opts',
-            render: (items) => (
+            render: (item) => (
                 <>
                     <div className='flex justify-between'>
-                        <Button icon={<FaEyeSlash/>}>Ver Detalhes</Button>
+                        <Button icon={<FaEyeSlash/>} onClick={()=>{
+                            setShow(true)
+                            setSelected(item)
+                        }}>Ver Detalhes</Button>
                     </div>
                 </>
             )
@@ -202,6 +212,7 @@ export default function OrderTablesList({ dataSource }) {
 
     return (<>
         <Table dataSource={dataSource} columns={columns} />
+        <OrderDetails open={show} setOpen={setShow} order={selected}/>
     </>)
 
 

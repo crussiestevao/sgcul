@@ -2,41 +2,41 @@ import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Popconfirm, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { FaDiagnoses, FaEyeSlash, FaRegEdit, FaTrash, FaUpload } from 'react-icons/fa';
+import { FaAllergies, FaDiagnoses, FaEyeSlash, FaFlag, FaPrint, FaRegEdit, FaTrash, FaUpload } from 'react-icons/fa';
 import axios from 'axios';
 import EditOrder from './EditOrder';
 
 
 
-export default function UnvalidatedOrderTablesList({ dataSource=[], setDataSource, stations, products }) {
+export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSource, stations, products }) {
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
 
     const [loading, setLoading] = useState(false);
-    const [edit, setEdit]=useState(false);
+    const [edit, setEdit] = useState(false);
 
-    const [selected, setSelected]=useState(null);
+    const [selected, setSelected] = useState(null);
 
 
 
     //remove
 
-const handlerDelete = async (id) =>{
-    const newData = dataSource.filter( item => item.id!=id);
-    setDataSource(newData);
+    const handlerDelete = async (id) => {
+        const newData = dataSource.filter(item => item.id != id);
+        setDataSource(newData);
 
-    try {
-        await axios.put(route('order.delete', id)).then(()=>{
+        try {
+            await axios.put(route('order.delete', id)).then(() => {
 
-        }).catch(()=>{
-            
-        })
-    } catch (error) {
-        console.log(error)
+            }).catch(() => {
+
+            })
+        } catch (error) {
+            console.log(error)
+        }
     }
-}
     //
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -145,7 +145,7 @@ const handlerDelete = async (id) =>{
             ),
     });
 
- 
+
     const validateOrder = async (id) => {
         setLoading(true)
         await axios.get(route('order.validate.one', id)).then((res) => {
@@ -217,21 +217,24 @@ const handlerDelete = async (id) =>{
             render: (item) => (
                 <>
                     <div className='flex gap-1'>
-                        <Popconfirm title="Validar essa Operação ?" description="Click em SIM para Confirmar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
+                        <Popconfirm  title={`Validar Operação ${item.code} ?`} description="Click em SIM para Confirmar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
                             onConfirm={() => validateOrder(item.id)}
                         >
                             <Button icon={<FaUpload />} className='bg-red-400 text-white' loading={loading}>Validar-Operacao</Button>
                         </Popconfirm>
 
-                        <Popconfirm title="Cancelar Operação ?" description="Deseja Cancelar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
+                        <Popconfirm title={`Cancelar Operação ${item.code} ?`} description="Deseja Cancelar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
                             onConfirm={() => handlerDelete(item.id)}
                         >
-                            <Button icon={<FaTrash/>} className='bg-yellow-400 text-white' loading={loading}>Cancelar</Button>
+                            <Button icon={<FaTrash  />} className='bg-yellow-400 text-white' loading={loading}>Cancelar</Button>
                         </Popconfirm>
-                        <Button onClick={()=>{
+                        <Button onClick={() => {
                             setSelected(item)
                             setEdit(true)
-                        }} icon={<FaRegEdit/>} className='bg-green-400 text-white' loading={loading}>Editar</Button>
+                        }} icon={<FaRegEdit  />} className='bg-green-400 text-white' loading={loading}>Editar</Button>
+                        <Button onClick={() => {
+                              window.open(route('order.print', item.id), '_blank', 'width=800,height=500,top=200,left=200')
+                        }} icon={<FaPrint />} className='bg-gray-800 text-white'>Imprimir</Button>
                     </div>
                 </>
             )
@@ -246,12 +249,12 @@ const handlerDelete = async (id) =>{
             <Popconfirm title="Validar todas Operações ?" description={<p className='text-red-400 font-bold'>Opção  perigosa, confirme caso tenha certeza</p>} okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
                 placement='left' onConfirm={() => validateAllOrder()}
             >
-                <Button disabled={dataSource.length>0? false : true} className='mb-4 bg-red-400 text-white' icon={<FaDiagnoses />} loading={loading}>Validar Todas</Button>
+                <Button disabled={dataSource.length > 0 ? false : true} className='mb-4 bg-red-400 text-white' icon={<FaDiagnoses />} loading={loading}>Validar Todas</Button>
             </Popconfirm>
         </div>
 
         <Table dataSource={dataSource} columns={columns} />
-        <EditOrder open={edit} setOpen={setEdit} stations={stations} products={products} order={selected}/>
+        <EditOrder open={edit} setOpen={setEdit} stations={stations} products={products} order={selected} setDataSource={setDataSource} />
     </>)
 
 

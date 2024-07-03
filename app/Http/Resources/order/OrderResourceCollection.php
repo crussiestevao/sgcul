@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class OrderResourceCollection extends ResourceCollection
 {
     /**
-     * Transform the resource collection into an array.
+     * Transform the resource collection into an array. 
      *
      * @return array<int|string, mixed>
      */
@@ -19,7 +19,9 @@ class OrderResourceCollection extends ResourceCollection
             return [
                'id'=> $order->id,
                'code'=>$order->order,
-               'created_at'=>date_format($order->created_at, 'd/m/y h:i'),
+            //    'created_at'=>date_format($order->created_at, 'd/m/y h:i'),
+               'created_at'=>$order->created_at->toDateTimeString(),
+               'validated_at'=>$order->validated_at,
                'station' => $order->station->name,
                'type'=>$order->type,
                'debit' =>$order->debit,

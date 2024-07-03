@@ -14,6 +14,7 @@ Route::controller(OrdersController::class)->group(function () {
         Route::get('validate/order/{id}/one', 'validateOne')->name('order.validate.one')->can('local_admin');
         Route::post('validate/order/all', 'validateAll')->name('order.validate.all')->can('local_admin');
         Route::put('order/{id}/delete', 'destroy')->name('order.delete')->can('local_admin');
+        Route::post('order/update', 'update')->name('order.update')->can('local_admin');
     });
 
 });

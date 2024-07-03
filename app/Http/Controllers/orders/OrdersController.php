@@ -20,18 +20,18 @@ class OrdersController extends Controller
     {
 
         $unvalidated_orders = new OrderResourceCollection(Order::whereValidatedAt(null)
-        ->orderBy('created_at', 'desc')
-        ->get()); 
+            ->orderBy('created_at', 'desc')
+            ->get());
 
-        $validated_orders = new OrderResourceCollection(Order::where('validated_at','<>', null)
-        ->orderBy('created_at', 'desc')
-        ->get()); 
+        $validated_orders = new OrderResourceCollection(Order::where('validated_at', '<>', null)
+            ->orderBy('created_at', 'desc')
+            ->get());
 
         $stations = Station::all();
         $products = Product::all();
-        
-        $data = compact('validated_orders', 'unvalidated_orders','stations','products');
-        
+
+        $data = compact('validated_orders', 'unvalidated_orders', 'stations', 'products');
+
         return Inertia::render("Orders/Orders", $data);
     }
 
@@ -49,17 +49,21 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
 
-        
+
         $stations = Station::find($request->station);
 
-        $counter = Order::query()
-        ->orderBy('created_at', 'desc')
-        ->get()->first()->id+1;
+
+
+        if (Order::count() > 0) {
+            $counter = Order::query()
+                ->orderBy('created_at', 'desc')
+                ->get()->first()->id + 1;
+        }else{ $counter = Order::count()+1;}
 
 
         $order = new Order();
 
-        $order->order = $request->code? $request->code : 'RQ'.$counter.''.Carbon::now()->year;
+        $order->order = $request->code ? $request->code : 'RQ' . $counter . '' . Carbon::now()->year;
         $order->driver = $request->driver;
         $order->registration = $request->registration;
         $order->station_id = $stations->id;
@@ -87,7 +91,7 @@ class OrdersController extends Controller
 
         $order->amount = $total_amount;
         $order->notes = $request->notes;
-       
+
 
         $order->save();
 
@@ -96,22 +100,23 @@ class OrdersController extends Controller
 
     public function print($id)
     {
-        
+
         $order = Order::find($id);
 
         $data = compact('order');
 
-       $pdf = Pdf::loadView('thermal.index', $data);
+        $pdf = Pdf::loadView('thermal.index', $data);
 
-       return $pdf->stream('Requisicao.pdf');
+        return $pdf->stream('Requisicao.pdf');
     }
 
-    public function validateOne($id){
-        
+    public function validateOne($id)
+    {
+
         $order = Order::find($id);
 
-       $stations = $order->station;
-       
+        $stations = $order->station;
+
         if ($stations->currentDebit() >= floatval($order->amount)) {
 
             $new_value = $stations->currentDebit() - floatval($order->amount);
@@ -130,29 +135,78 @@ class OrdersController extends Controller
             $order->balance = $new_value;
             $order->credit = $stations->currentCredit();
             $order->debit = $stations->currentDebit();
-            
+
             $stations->createNewCredit($new_value);
         }
-        
+
         $order->validated_at = now();
         $order->save();
 
         $data = Order::whereValidatedAt(null)
-        ->orderBy('created_at', 'desc')
-        ->get(); 
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        
+
         return $data;
     }
 
-    public function validateAll(){
+    public function validateAll()
+    {
         dd('Accao perigosa por implememtar');
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $order = Order::find($id);
         $order->delete();
         return response()->json([], 200);
     }
+
+    public function update(Request $request)
+    {
+
+        $stations = Station::find($request->station);
+
+        $order = Order::find($request->id);
+
+        $order->driver = $request->driver;
+        $order->registration = $request->registration;
+        $order->station_id = $stations->id;
+        $order->notes = $request->notes;
+
+        foreach ($order->items as $items) {
+            $items->delete();
+        };
+
+        $total_amount = 0;
+
+        foreach ($request->items as $items) {
+
+            $item = collect($items);
+            $product_id = $item->has('product_d') ? $item['product_d'] : $item['product'];
+
+            $product = Product::find($product_id);
+            $order_item = new OrderItem();
+            $order_item->order_id = $order->id;
+            $order_item->product_d = $product->id;
+            $order_item->code = $product->code;
+            $order_item->price = $product->price;
+            $order_item->name = $product->name;
+            $order_item->quantity = $item['quantity'];
+            $order_item->save();
+
+
+            $total_amount += $product->price * $item['quantity'];
+        }
+
+        $order->amount = $total_amount;
+
+        $order->save();
+
+        $data = new OrderResourceCollection(Order::whereValidatedAt(null)
+            ->orderBy('created_at', 'desc')
+            ->get());
+
+        return $data;
+    }
 }
- 

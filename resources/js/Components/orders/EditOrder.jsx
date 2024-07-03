@@ -1,8 +1,9 @@
-import { Button, Col, Form, Input, Row, Select, Table, Modal, Skeleton } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Table, Modal, Skeleton, message } from 'antd';
+import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 
 
-export default function EditOrder({ open, setOpen, stations = [], products = [], order = {} }) {
+export default function EditOrder({ open, setOpen, stations = [], products = [], order = {}, setDataSource }) {
 
     const formRef1 = useRef(null);
     const [items, setItems] = useState([]);
@@ -35,7 +36,26 @@ export default function EditOrder({ open, setOpen, stations = [], products = [],
                 setLoad(false)
             })
         }
-    }, [open])
+    }, [open]);
+
+    const update = async (data) =>{
+
+        data['items'] = items;
+        data['id'] = order.id;
+
+        const station = stations.find(item => item.id===data.station || item.name===data.station);
+
+        data['station'] = station.id;
+
+       
+        await axios.post(route('order.update'), data).then((res)=>{
+                message.success('Requisiacao Actualizada');
+                setDataSource(res.data.data)
+        }).then(()=>{
+
+        })
+    }
+
 
     return (<>
         <Modal open={open} onCancel={() =>setOpen(false)} title="Editar Requisicao" width={1000} footer={null}>
@@ -44,11 +64,11 @@ export default function EditOrder({ open, setOpen, stations = [], products = [],
 
                     (<>
 
-                        <Form layout='vertical' ref={formRef1} initialValues={order}>
+                        <Form layout='vertical' ref={formRef1} initialValues={order} onFinish={update}>
                             <div className='shadow p-4 bg-white'>
                                 <div className='flex gap-1'>
-                                    <Form.Item label="Codigo da requisicao (Opcional)" name={'code'} className='w-1/2'>
-                                        <Input placeholder='Opcional' allowClear />
+                                    <Form.Item label="Codigo da requisicao (Opcional)"  name={'code'} className='w-1/2'>
+                                        <Input placeholder='Opcional' allowClear readOnly/>
                                     </Form.Item>
 
                                     <Form.Item className='w-1/2' label="Motorista" name={'driver'} rules={[{ required: true, message: 'Indique o motorista' }]}>
@@ -77,7 +97,7 @@ export default function EditOrder({ open, setOpen, stations = [], products = [],
                             <div className='shadow p-4 bg-white mt-4'>
                                 <Row gutter={12}>
                                     <Col xs={10}>
-                                        <Form.Item label="Productos" name={'product'} rules={[{ required: true, message: 'Selecione um producto' }]}>
+                                        <Form.Item label="Productos" name={'product'}>
                                             <Select placeholder="Productos" showSearch optionFilterProp='children'>
                                                 {
                                                     products.map((item, index) => (
@@ -89,7 +109,7 @@ export default function EditOrder({ open, setOpen, stations = [], products = [],
                                     </Col>
                                     <Col xs={8}>
 
-                                        <Form.Item label="Quantidade" name={'quantity'} rules={[{ required: true, message: 'indique quantidade' }]}>
+                                        <Form.Item label="Quantidade" name={'quantity'}>
                                             <Input type='number' placeholder='Quantidade' allowClear minLength={1} min={1} />
                                         </Form.Item>
                                     </Col>

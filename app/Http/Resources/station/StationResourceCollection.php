@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\station;
 
+use App\Http\Resources\order\OrderResourceCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -21,7 +22,7 @@ class StationResourceCollection extends ResourceCollection
                'name'=>$station->name,
                'credit' => $station->currentCredit(),
                'debit'  => $station->currentDebit(),
-               'moviments' =>$station->validatedOrders
+               'moviments' => new OrderResourceCollection($station->validatedOrders)
             ];
         });
         return $data->toArray();

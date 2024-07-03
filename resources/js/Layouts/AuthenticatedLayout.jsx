@@ -44,7 +44,7 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
             case "7":
                 return router.get(route('order.new'));
                 break;
-            case "8" :
+            case "8":
                 return router.get(route('order.validation.area'));
                 break;
 
@@ -74,7 +74,10 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                                 route().current('product.create') ? ["4"] :
                                     route().current('order.create') || route().current('order.new') ? ["5"] :
                                         route().current('categorie.create') ? ["3"] :
-                                            route().current('stations.list') ? ["6"] : ['1']
+                                            route().current('stations.list') ? ["6"] :
+                                                route().current('order.new') ? ["7"] :
+                                                    route().current('order.validation.area') ? ["8"] :
+                                                        ['1']
                                 ;
                         }}
                         onClick={navegateTo}
@@ -139,17 +142,18 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                                     {
                                         key: '8',
                                         icon: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 0 1 0 3.75H5.625a1.875 1.875 0 0 1 0-3.75Z" />
                                         </svg>
+
                                         ,
-                                        label: 'Validar',
+                                        label: 'Listagem',
                                     }
                                 ]
                             }
 
                         ]}
-                       
-                        
+
+                        defaultOpenKeys={['orders']}
                     />
                 </Sider>
                 <Layout>
