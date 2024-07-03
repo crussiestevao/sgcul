@@ -38,7 +38,7 @@ export default function Products(props) {
                 key: '1',
                 label:<p className='flex gap-1 text-base'><FaRegClipboard/>Operações Pendentes</p>,
                 children: <UnvalidatedOrderTablesList dataSource={unvalidated_orders} setDataSource={setUnvalidated}
-                 stations={props.stations} products={props.products}/>,
+                 stations={props.stations} products={props.products} setValidated={setValidated}/>,
             },
             {
                 key: '2',

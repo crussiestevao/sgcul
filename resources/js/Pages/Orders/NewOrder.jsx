@@ -1,6 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { Button, Col, Form, Input, Row, Select, Table, Modal, Flex, Spin, Space } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Table, Modal, Flex, Spin, Space, notification } from 'antd';
 import axios from 'axios';
 import { useRef, useState } from 'react';
 import { FaAddressCard } from 'react-icons/fa';
@@ -49,6 +49,11 @@ export default function NewOrder(props) {
             formRef1.current.resetFields();
             setSaving(false);
             setItems([]);
+            notification.open({
+                message:'Emitido',
+                type:'success',
+                description:'Aguarde a impressao'
+            })
             window.open(route('order.print', response.data.id), '_blank', 'width=800,height=500,top=200,left=200')
         }).catch((err) => {
             setSaving(false);

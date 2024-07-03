@@ -3,6 +3,7 @@
 namespace App\Models\product;
 
 use App\Models\categories\Category;
+use App\Models\items\OrderItem;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
@@ -39,6 +40,10 @@ class Product extends Model
 
     public function category(){
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function items(){
+        return $this->hasMany(OrderItem::class, 'product_d');
     }
 
 

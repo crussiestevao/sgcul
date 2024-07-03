@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Popconfirm, Space, Table } from 'antd';
+import { Button, Input, message, Popconfirm, Space, Table } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { FaAllergies, FaDiagnoses, FaEyeSlash, FaFlag, FaPrint, FaRegEdit, FaTrash, FaUpload } from 'react-icons/fa';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import EditOrder from './EditOrder';
 
 
 
-export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSource, stations, products }) {
+export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSource,setValidated, stations, products }) {
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -159,9 +159,10 @@ export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSou
     const validateAllOrder = async (id) => {
         setLoading(true)
         await axios.post(route('order.validate.all')).then((res) => {
-            setDataSource(res.data)
-            console.log(res.data)
+            setValidated(res.data.data)
+            setDataSource([])
             setLoading(false)
+            message.success('Lista das validadas foi actualizada')
         }).catch((err) => {
             setLoading(false)
         })

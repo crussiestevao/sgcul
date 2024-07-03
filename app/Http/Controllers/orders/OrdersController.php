@@ -4,6 +4,7 @@ namespace App\Http\Controllers\orders;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\order\OrderResourceCollection;
+use App\Models\categories\Category;
 use App\Models\items\OrderItem;
 use App\Models\order\Order;
 use App\Models\product\Product;
@@ -11,6 +12,7 @@ use App\Models\station\Station;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Storage;
 
@@ -58,7 +60,9 @@ class OrdersController extends Controller
             $counter = Order::query()
                 ->orderBy('created_at', 'desc')
                 ->get()->first()->id + 1;
-        }else{ $counter = Order::count()+1;}
+        } else {
+            $counter = Order::count() + 1;
+        }
 
 
         $order = new Order();
@@ -152,7 +156,25 @@ class OrdersController extends Controller
 
     public function validateAll()
     {
-        dd('Accao perigosa por implememtar');
+        $unvalidated_orders = new OrderResourceCollection(Order::whereValidatedAt(null)
+            ->orderBy('created_at', 'desc')
+            ->get());
+
+        foreach ($unvalidated_orders as $order) {
+            try {
+                $this->validateOne($order->id);
+
+                sleep(1);
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        }
+
+        $validated_orders = new OrderResourceCollection(Order::where('validated_at', '<>', null)
+            ->orderBy('created_at', 'desc')
+            ->get());
+
+        return $validated_orders;
     }
 
     public function destroy($id)
@@ -208,5 +230,81 @@ class OrdersController extends Controller
             ->get());
 
         return $data;
+    }
+
+    public function getOrderData() // for barChart
+    {
+        $orderData = Order::select(DB::raw('YEAR(created_at) as year'), DB::raw('count(*) as count'))
+            ->groupBy('year')
+            ->orderBy('year')
+            ->get();
+
+        $years = $orderData->pluck('year');
+        $counts = $orderData->pluck('count');
+
+        $categoriesLabels = collect([]);
+        $stationsLabels = collect([]);
+
+        $categoriesSeries = collect([]);
+        $stationsSeries = collect([]);
+
+
+        foreach (Category::all() as $cat) {
+            $categoriesLabels->push($cat->name);
+            $total = 0 ;
+            foreach($cat->products as $prod){
+                $total += $prod->items->count();
+            }
+            $categoriesSeries->push($total);
+        }
+
+        foreach (Station::all() as $st) {
+            $stationsLabels->push($st->name);
+            $stationsSeries->push($st->orders->count());
+        }
+
+
+
+
+        $orderChartdata = [
+            'options' => [
+                'chart' => [
+                    'id' => 'Requisicoes Chart'
+                ],
+                'xaxis' => [
+                    'categories' => $years
+                ]
+            ],
+            'series' => [
+                [
+                    'name' => 'Requisicoes',
+                    'data' => $counts
+                ]
+            ]
+        ];
+
+        $categorisChartData = [
+            'options' => [
+                'chart' => [
+                    'type' => 'donut'
+                ],
+                'labels' => $categoriesLabels
+            ],
+            'series' =>  $categoriesSeries,
+        ];
+
+        $stationsChartData = [
+            'options' => [
+                'chart' => [
+                    'type' => 'donut'
+                ],
+                'labels' => $stationsLabels
+            ],
+            'series' =>  $stationsSeries,
+        ];
+
+        $data = compact('orderChartdata', 'stationsChartData', 'categorisChartData');
+
+        return response()->json($data);
     }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Models\categories;
 
+use App\Models\items\OrderItem;
+use App\Models\product\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * 
@@ -25,5 +28,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory, HasRelationships;
+
+    public function products(){
+        return $this->hasMany(Product::class, 'category_id');
+    }
+
+ 
 }

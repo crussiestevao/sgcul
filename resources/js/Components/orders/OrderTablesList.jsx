@@ -199,7 +199,7 @@ export default function OrderTablesList({ dataSource }) {
             render: (item) => (
                 <>
                     <div className='flex justify-between'>
-                        <Button icon={<FaEyeSlash/>} onClick={()=>{
+                        <Button icon={<FaEyeSlash/>} className='bg-gray-800 text-white' onClick={()=>{
                             setShow(true)
                             setSelected(item)
                         }}>Ver Detalhes</Button>
