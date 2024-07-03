@@ -1,4 +1,5 @@
 import AddProduct from '@/Components/products/AddProduct';
+import EditProduct from '@/Components/products/EditProduct';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { Button, Card, Input, Statistic } from 'antd';
@@ -12,6 +13,10 @@ export default function Products(props) {
     const [categories, setCategories]= useState(props.categories);
 
     const [open, setOpen] = useState(false);
+    const [edit, setEdit] = useState(false);
+
+    //
+    const [selected, setSelectedProduct] = useState(null);
 
     const columns = [
         {
@@ -53,7 +58,8 @@ export default function Products(props) {
                 <Space size="middle" className='flex gap-1'>
                     <Button type="primary" icon={<FaEye />}
                         onClick={() => {
-                            setFetching(!fetching);
+                            setEdit(true)
+                            setSelectedProduct(record)
                         }}
                     ></Button>
 
@@ -93,6 +99,7 @@ export default function Products(props) {
 
 
             <AddProduct categories={categories} open={open} datasource={datasource} setDataSource={setDataSource} setOpen={setOpen}/>
+            <EditProduct open={edit} setOpen={setEdit} setDataSource={setDataSource} categories={categories} selectedProduct={selected}/>
         </AuthenticatedLayout>
     );
 }

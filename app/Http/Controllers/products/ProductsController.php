@@ -37,4 +37,23 @@ class ProductsController extends Controller
 
         return compact('products');
     }
+
+
+    public function update(Request $request){
+
+     
+
+        $product =Product::find($request->id);
+
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->descriptions = $request->descriptions;
+        $product->category_id = $request->category;
+        
+        $product->save();
+
+        $products = Product::all();
+        
+        return $products;
+    }
 }

@@ -10,6 +10,7 @@ Route::controller(ProductsController::class)->group(function () {
     Route::middleware("auth")->group(function () {
         Route::get("/produtos", 'index' )->name("product.create");
         Route::post('product/add/new', 'store')->name('product.add.new')->can('local_admin');
+        Route::post('product/update', 'update')->name('product.update')->can('local_admin');
     });
 
 });

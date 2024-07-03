@@ -80,7 +80,7 @@ export default function Categories(props) {
 
             <div className="flex h-screen">
                 {/* Left Side Content (65%) */}
-                <div className="w-8/12 bg-gray-100 p-4 border border-left">
+                <div className="w-full bg-gray-100 p-4 border border-left">
                     <div className="flex flex-col h-full">
                         {/* First Row */}
                         <div className="mb-4 flex justify-between space-x-2">
@@ -100,26 +100,7 @@ export default function Categories(props) {
                     </div>
                 </div>
 
-                {/* Right Side Content (35%) */}
-                <div className="w-4/12 bg-gray-100 p-4">
-
-                    <h2 className="text-lg font-bold mb-4">Productos Associados: </h2>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {
-                            fetching ?
-                                <Empty description="Nehum Producto Associado" /> :
-                                <div>
-                                    <Skeleton active />
-                                    <Skeleton active />
-                                    <Skeleton active />
-                                    <Skeleton active />
-                                </div>
-                        }
-                    </div>
-
-                </div>
-
+        
             </div>
 
 
