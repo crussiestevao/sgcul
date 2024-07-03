@@ -11,7 +11,7 @@ export default function User(props) {
         return text;
     }
 
-    const [users, setUsers] = useState(props.users);
+    const [users, setUsers] = useState(props.users.data);
     const [openCreation, setOpenCreation] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -43,7 +43,7 @@ export default function User(props) {
         await axios.post(route('user.store', data)).then((response) => {
             setSaving(false);
             formRef.current.resetFields();
-            setUsers(response.data.users);
+            setUsers(response.data.data);
             notification.open({
                 message: <><p className='text-white'>Parabéns</p></>,
                 placement: 'top',
@@ -75,10 +75,15 @@ export default function User(props) {
             render: (text) => <a>👤 {text}</a>,
         },
         {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
             title: 'Nivel de acesso',
-            dataIndex: 'age',
-            key: 'age',
-            render: (text) => <a>Aqui ficara o nivel de acesso</a>,
+            dataIndex: 'roles',
+            key: 'roles',
+            // render: (text) => <a>Aqui ficara o nivel de acesso</a>,
         },
         {
             title: 'Data de criacao',
@@ -215,7 +220,7 @@ export default function User(props) {
             </Modal>
 
             <EditUser openEdit={openEdit} setOpenEdit={setOpenEdit} selectedUser={selectedUser} props={props}
-            setSelectedUser={setSelectedUser}/>
+            setSelectedUser={setSelectedUser} setDataSource={setUsers}/>
 
         </AuthenticatedLayout>
     );

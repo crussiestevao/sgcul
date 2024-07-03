@@ -29,6 +29,12 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+    
+     public static function table()
+    {
+        return 'roles';
+    }
+    
     public function users(){
         return $this->belongsToMany(User::class, "user_has_role","role_id","user_id");
     }

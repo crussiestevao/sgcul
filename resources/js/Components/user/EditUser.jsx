@@ -1,8 +1,8 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Col, Form, Input, Modal, Row, Select, Skeleton } from 'antd';
+import { Col, Form, Input, message, Modal, notification, Row, Select, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
-export default function EditUser({ openEdit, setOpenEdit, selectedUser, props, setSelectedUser }) {
+export default function EditUser({ openEdit, setOpenEdit, selectedUser, props, setSelectedUser, setDataSource }) {
 
     const formRef2 = useRef(null);
     const [saving, setSaving] = useState(false);
@@ -17,25 +17,47 @@ export default function EditUser({ openEdit, setOpenEdit, selectedUser, props, s
     );
 
     const onCloseAndEdit = async (data) => {
+        
+        const roles = [];
 
+        data.roles.forEach((role) =>
+         {
+            const finded =  props.roles.find(item => item.id===role || item.name===role)
+            roles.push(finded.id)
+         }
+
+        )
+
+        data['roles'] = roles;
+        data['id'] = selectedUser.id;
+        
+        
         setSaving(true);
-        await axios.post(route('user.edit', data)).then((response) => {
+
+        await axios.post(route('user.update', data)).then((response) => {
             setSaving(false);
-            formRef.current.resetFields();
-            setUsers(response.data.users);
+            setDataSource(response.data.data);
+            console.log(response.data.data);
             notification.open({
                 message: <><p className='text-white'>Parabéns</p></>,
                 placement: 'top',
                 type: 'success',
-                description: <><p className='text-white'>Um novo usuário foi criado com sucesso</p></>,
+                description: <><p className='text-white'>usuário foi actualizado com sucesso</p></>,
                 style: { fontSize: '12px', backgroundColor: '#344248', }
             });
-        }
-        ).catch((error) => {
-            console.log(error.message)
+        },
+        (error) => {
+            message.error()
             setSaving(false)
-            formRef.current.resetFields();
-        });
+            notification.open({
+                message: <><p className='text-white'>Erro</p></>,
+                placement: 'top',
+                type: 'error',
+                description: <><p className='text-white'>{error.response.data.message}</p></>,
+                style: { fontSize: '12px', backgroundColor: 'red', }
+            });
+        }
+        )
     }
 
     useEffect(() => {
