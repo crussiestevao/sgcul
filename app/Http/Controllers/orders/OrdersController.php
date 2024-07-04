@@ -12,6 +12,7 @@ use App\Models\station\Station;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Storage;
@@ -71,6 +72,7 @@ class OrdersController extends Controller
         $order->driver = $request->driver;
         $order->registration = $request->registration;
         $order->station_id = $stations->id;
+        $order->user_id = Auth::user()->id;
 
 
         $order->save();

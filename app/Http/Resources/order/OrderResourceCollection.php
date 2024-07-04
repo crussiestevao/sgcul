@@ -30,7 +30,8 @@ class OrderResourceCollection extends ResourceCollection
                'driver'=>$order->driver,
                'balance'=>$order->balance,
                'amount' =>number_format($order->amount, 2),
-               'items'=> $order->items
+               'items'=> $order->items,
+               'user' => $order->user->name
             ];
         });
         return $data->toArray();

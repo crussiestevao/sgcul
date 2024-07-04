@@ -69,6 +69,7 @@ export default function NewOrder(props) {
             <Head title="Nova Requisição" />
 
             <Form layout='vertical' ref={formRef1} onFinish={saveOrder}>
+                <p className='font-bold text-lg mb-4'>* Detalhes da Req</p>
                 <div className='shadow p-4 bg-white'>
                     <Form.Item label="Codigo da requisicao (Opcional)" name={'code'}>
                         <Input placeholder='Opcional' allowClear />
@@ -93,6 +94,7 @@ export default function NewOrder(props) {
                         <Input.TextArea placeholder='Observação' allowClear />
                     </Form.Item>
                 </div>
+                <p className='font-bold text-lg mb-4 mt-4'>* Adicione Productos</p>
                 <div className='shadow p-4 bg-white mt-4'>
                     <Row gutter={12}>
                         <Col xs={10}>

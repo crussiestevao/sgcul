@@ -30,6 +30,7 @@ return new class extends Migration
             $table->decimal('amount', 10,2)->nullable();
             $table->text('notes')->nullable();
             $table->foreignId('station_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             
         });
     }

@@ -4,6 +4,7 @@ namespace App\Models\order;
 
 use App\Models\items\OrderItem;
 use App\Models\station\Station;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -57,5 +58,9 @@ class Order extends Model
 
     public function station(){
         return $this->belongsTo(Station::class, 'station_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -34,7 +34,7 @@ export default function OrderDetails({ open, setOpen, order = {} }) {
                         <Descriptions bordered className='mb-4 shadow font-bold'>
                             <Descriptions.Item label="Data de Emissao: ">{order?.created_at}</Descriptions.Item>
                             <Descriptions.Item label="Data de Validacao: ">{order?.validated_at}</Descriptions.Item>
-                            <Descriptions.Item label="Emitido por: ">{order?.registration}</Descriptions.Item>
+                            <Descriptions.Item label="Emitido por: ">{order?.user}</Descriptions.Item>
                         </Descriptions>
 
                         <Descriptions bordered className='mb-4 shadow font-bold'>
