@@ -8,7 +8,7 @@ import EditOrder from './EditOrder';
 
 
 
-export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSource,setValidated, stations, products }) {
+export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSource, setValidated, stations, products }) {
 
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -218,7 +218,7 @@ export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSou
             render: (item) => (
                 <>
                     <div className='flex gap-1'>
-                        <Popconfirm  title={`Validar Operação ${item.code} ?`} description="Click em SIM para Confirmar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
+                        <Popconfirm title={`Validar Operação ${item.code} ?`} description="Click em SIM para Confirmar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
                             onConfirm={() => validateOrder(item.id)}
                         >
                             <Button icon={<FaUpload />} className='bg-red-400 text-white' loading={loading}>Validar-Operacao</Button>
@@ -227,14 +227,14 @@ export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSou
                         <Popconfirm title={`Cancelar Operação ${item.code} ?`} description="Deseja Cancelar" okText="SIM" cancelText="Fechar" okButtonProps={{ className: 'bg-red-400 pl-4' }}
                             onConfirm={() => handlerDelete(item.id)}
                         >
-                            <Button icon={<FaTrash  />} className='bg-yellow-400 text-white' loading={loading}>Cancelar</Button>
+                            <Button icon={<FaTrash />} className='bg-yellow-400 text-white' loading={loading}>Cancelar</Button>
                         </Popconfirm>
                         <Button onClick={() => {
                             setSelected(item)
                             setEdit(true)
-                        }} icon={<FaRegEdit  />} className='bg-green-400 text-white' loading={loading}>Editar</Button>
+                        }} icon={<FaRegEdit />} className='bg-green-400 text-white' loading={loading}>Editar</Button>
                         <Button onClick={() => {
-                              window.open(route('order.print', item.id), '_blank', 'width=800,height=500,top=200,left=200')
+                            window.open(route('order.print', item.id), '_blank', 'width=800,height=500,top=200,left=200')
                         }} icon={<FaPrint />} className='bg-gray-800 text-white'>Imprimir</Button>
                     </div>
                 </>
@@ -254,7 +254,12 @@ export default function UnvalidatedOrderTablesList({ dataSource = [], setDataSou
             </Popconfirm>
         </div>
 
-        <Table dataSource={dataSource} columns={columns} />
+        <Table dataSource={dataSource} columns={columns}
+            rowHoverable={false}
+            rowClassName={(e) => {
+                return 'cursor-pointer hover:bg-blue-400 font-normal hover:text-white';
+            }}
+        />
         <EditOrder open={edit} setOpen={setEdit} stations={stations} products={products} order={selected} setDataSource={setDataSource} />
     </>)
 

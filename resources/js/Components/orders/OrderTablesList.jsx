@@ -13,9 +13,9 @@ export default function OrderTablesList({ dataSource }) {
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
 
-    const [show, setShow]=useState(false);
+    const [show, setShow] = useState(false);
 
-    const [selected, setSelected]=useState(null);
+    const [selected, setSelected] = useState(null);
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -125,16 +125,16 @@ export default function OrderTablesList({ dataSource }) {
     const formateDate = (param) => {
         const dateStr = param;
         const date = new Date(dateStr);
-      
+
         const formattedDate = date.toLocaleDateString('en-GB'); // For DD/MM/YYYY format
         const formattedTime = date.toLocaleTimeString();
-      
+
         return (
-          <div>
-            {formattedDate} {formattedTime}
-          </div>
+            <div>
+                {formattedDate} {formattedTime}
+            </div>
         );
-      };
+    };
 
     const columns = [
         {
@@ -142,7 +142,7 @@ export default function OrderTablesList({ dataSource }) {
             // dataIndex: 'created_at',
             key: 'created_at',
             render: (item) => formateDate(item.created_at)
-        
+
         },
         {
             title: 'Codigo',
@@ -199,7 +199,7 @@ export default function OrderTablesList({ dataSource }) {
             render: (item) => (
                 <>
                     <div className='flex justify-between'>
-                        <Button icon={<FaEyeSlash/>} className='bg-gray-800 text-white' onClick={()=>{
+                        <Button icon={<FaEyeSlash />} className='bg-gray-800 text-white' onClick={() => {
                             setShow(true)
                             setSelected(item)
                         }}>Ver Detalhes</Button>
@@ -211,8 +211,13 @@ export default function OrderTablesList({ dataSource }) {
 
 
     return (<>
-        <Table dataSource={dataSource} columns={columns} />
-        <OrderDetails open={show} setOpen={setShow} order={selected}/>
+        <Table dataSource={dataSource} columns={columns}
+            rowHoverable={false}
+            rowClassName={(e) => {
+                return 'cursor-pointer hover:bg-blue-400 font-normal hover:text-white';
+            }}
+        />
+        <OrderDetails open={show} setOpen={setShow} order={selected} />
     </>)
 
 
