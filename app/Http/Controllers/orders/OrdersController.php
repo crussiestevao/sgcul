@@ -83,7 +83,7 @@ class OrdersController extends Controller
 
             $order_item = new OrderItem();
             $order_item->order_id = $order->id;
-            $order_item->product_d = $product->id;
+            $order_item->product_id = $product->id;
             $order_item->code = $product->code;
             $order_item->price = $product->price;
             $order_item->name = $product->name;
@@ -136,11 +136,11 @@ class OrdersController extends Controller
             $new_value = $stations->currentCredit() + floatval($order->amount);
 
             $order->type = "credito";
-            $order->balance = $new_value;
+            $order->balance = $new_value - $stations->currentDebit();
             $order->credit = $stations->currentCredit();
             $order->debit = $stations->currentDebit();
 
-            $stations->createNewCredit($new_value);
+            $stations->createNewCredit($new_value - $stations->currentDebit());
         }
 
         $order->validated_at = now();
@@ -205,12 +205,12 @@ class OrdersController extends Controller
         foreach ($request->items as $items) {
 
             $item = collect($items);
-            $product_id = $item->has('product_d') ? $item['product_d'] : $item['product'];
+            $product_id = $item->has('product_id') ? $item['product_id'] : $item['product'];
 
             $product = Product::find($product_id);
             $order_item = new OrderItem();
             $order_item->order_id = $order->id;
-            $order_item->product_d = $product->id;
+            $order_item->product_id = $product->id;
             $order_item->code = $product->code;
             $order_item->price = $product->price;
             $order_item->name = $product->name;
