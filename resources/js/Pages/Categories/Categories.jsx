@@ -100,7 +100,7 @@ export default function Categories(props) {
                     </div>
                 </div>
 
-        
+
             </div>
 
 

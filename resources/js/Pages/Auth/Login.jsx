@@ -68,7 +68,7 @@ export default function Login({ status, canResetPassword,logo }) {
                 </div>
 
                 <div className="mt-4">
-                    <PrimaryButton className=" w-full flex justify-center bg-blue-400 font-bold" disabled={processing}>
+                    <PrimaryButton className="w-full flex justify-center font-bold" disabled={processing}>
                         Entrar
                     </PrimaryButton>
                 </div>
