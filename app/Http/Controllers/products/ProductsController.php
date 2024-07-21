@@ -56,4 +56,21 @@ class ProductsController extends Controller
         
         return $products;
     }
+
+
+    
+    public function destroy($id){
+        $prod = Product::find($id);
+
+        try {
+            $prod->delete();
+          } catch (\Throwable $th) {
+            //throw $th;
+          }
+    
+          $products = Product::all();
+        
+          return $products;
+    }
+
 }
