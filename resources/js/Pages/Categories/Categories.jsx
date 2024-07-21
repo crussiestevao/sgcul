@@ -1,7 +1,8 @@
+import EditCategory from '@/Components/categories/EditCategory';
 import Modal from '@/Components/Modal';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { Button, Card, Empty, Form, Input, message, notification, Skeleton, Statistic } from 'antd';
+import { Button, Card, Empty, Form, Input, message, notification, Popconfirm, Skeleton, Statistic } from 'antd';
 import { Space, Table, Tag } from 'antd';
 import axios from 'axios';
 import { useRef, useState } from 'react';
@@ -16,12 +17,29 @@ export default function Categories(props) {
 
     const formRef = useRef(null);
 
+    //
+    const [openEdit, setOpenEdit] = useState(false);
+    const [selected, setSelected] = useState({});
+    //
+
     const saveCategory = async (data) => {
 
         await axios.post(route('categorie.add.new'), data).then((res) => {
             setDataSource(res.data.categories);
             formRef.current.resetFields();
             message.success('Categoria com sucesso');
+        }).catch((err) => {
+
+        });
+    }
+
+    const destroy = async (id) =>{
+        const n = datasource.filter(item => item.id!=id);
+        setDataSource(n);
+
+        await axios.delete(route('categorie.delete', {'id': id})).then((res) => {
+            setDataSource(res.data.categories);
+            message.success('Removido');
         }).catch((err) => {
 
         });
@@ -59,11 +77,14 @@ export default function Categories(props) {
                 <Space size="middle" className='flex gap-1'>
                     <Button type="primary" icon={<FaEye />}
                         onClick={() => {
-                            setFetching(!fetching);
+                            setOpenEdit(true);
+                            setSelected(record)
                         }}
                     ></Button>
 
+                    <Popconfirm title="Remover Categoria" description="deseja remover?" onConfirm={()=>destroy(record.id)}>
                     <Button type="primary" className='bg-red-400'>🗑️</Button>
+                    </Popconfirm>
 
                 </Space>
             ),
@@ -137,6 +158,14 @@ export default function Categories(props) {
                     </Form.Item>
                 </Modal>
             </div>
+
+            <EditCategory
+                setDataSource={setDataSource}
+                openEdit={openEdit}
+                setOpenEdit={setOpenEdit}
+                selectedCategory={selected}
+                setSelectedCategory={setSelected}
+            />
 
         </AuthenticatedLayout>
     );

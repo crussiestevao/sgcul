@@ -30,5 +30,35 @@ class CategoriesController extends Controller
         return compact('categories');
     }
 
+    public function update(Request $request){
+      $category = Category::find($request->id);
+
+      try {
+        $category->name = $request->name;
+        $category->descriptions = $request->descriptions;
+        $category->save();
+      } catch (\Throwable $th) {
+        //throw $th;
+      }
+
+      $categories = Category::all();
+
+      return compact('categories');
+    }
+
+    public function destroy($id){
+        $category = Category::find($id);
+
+        try {
+            $category->delete();
+          } catch (\Throwable $th) {
+            //throw $th;
+          }
+    
+          $categories = Category::all();
+    
+          return compact('categories');
+    }
+
 
 }

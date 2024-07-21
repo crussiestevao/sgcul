@@ -2,10 +2,10 @@ import { Form, Input, message, Modal, Skeleton } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 
 import { Button } from 'antd';
-import { FaArrowLeft, FaSave } from "react-icons/fa";
 import axios from 'axios';
+import { FaArrowLeft, FaSave } from "react-icons/fa";
 
-export default function EditCategory({ openEdit, setOpenEdit, selectedUser, props, setSelectedUser, setDataSource }) {
+export default function EditCategory({ openEdit, setOpenEdit, selectedCategory={}, setSelectedCategory, setDataSource }) {
 
     const formRef2 = useRef(null);
     const [saving, setSaving] = useState(false);
@@ -17,15 +17,20 @@ export default function EditCategory({ openEdit, setOpenEdit, selectedUser, prop
 
     const saveCategory = async (data) => {
 
-        await axios.post(route('categorie.add.new'), data).then((res) => {
+        data['id'] = selectedCategory.id;
+        await axios.post(route('categorie.edit'), data).then((res) => {
             setDataSource(res.data.categories);
             formRef2.current.resetFields();
-            message.success('Categoria com sucesso');
+            message.success('Categoria Actualizada sucesso');
+            setOpenEdit(false)
         }).catch((err) => {
 
         });
     }
 
+    const delay = ms => new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
     useEffect(() => {
 
         if (openEdit === true) {
@@ -34,26 +39,26 @@ export default function EditCategory({ openEdit, setOpenEdit, selectedUser, prop
                 setLoading(false);
             })
         }
-    }, [selectedUser])
+    }, [selectedCategory])
 
     return (<>
 
-        <Modal key={'user_edit'} className='bg-red-300 rounded shadow'
-            title={<p className=' text-lg font-weight-bold'>⚠️ Editar usuario:  {selectedUser?.name}{loading}</p>}
+        <Modal key={'edit_categorie'} className='bg-red-300 rounded shadow'
+            title={<p className=' text-lg font-weight-bold'>⚠️ Editar usuario:  {selectedCategory?.name}{loading}</p>}
             open={openEdit}
             onCancel={() => {
                 setOpenEdit(false)
                 formRef2.current?.resetFields();
-                setSelectedUser(null);
+                setSelectedCategory(null);
             }} width={1000}
             okButtonProps={{ className: 'bg-red-400', loading: saving }} okText="Salvar alterações"
             styles={{ body: { backgroundColor: '#f1f5f9', padding: 20 } }}
-            onOk={() => formRef2.current.submit()}
+            footer={null}
         >
             {
                 loading ? <Skeleton active /> :
                     <div>
-                        <Form className='mx-8 px-lg-4 py-4' layout='vertical' ref={formRef2} onFinish={saveCategory}>
+                        <Form className='mx-8 px-lg-4 py-4' layout='vertical' ref={formRef2} onFinish={saveCategory} initialValues={selectedCategory}>
                             <Form.Item label="Nome" name={'name'} rules={[{
                                 required: true,
                                 message: 'Indique um nome valido'
@@ -67,7 +72,7 @@ export default function EditCategory({ openEdit, setOpenEdit, selectedUser, prop
                         <Form.Item>
                             <div className='flex justify-between px-8 py-4'>
                                 <Button icon={<FaArrowLeft />} onClick={() => {
-                                    setOpen(false)
+                                    setOpenEdit(false)
                                 }}>
                                     Fechar
                                 </Button>
@@ -75,7 +80,7 @@ export default function EditCategory({ openEdit, setOpenEdit, selectedUser, prop
                                     onClick={() => {
                                         formRef2.current.submit()
                                     }}>
-                                    Salvar & Adiconar
+                                    EDITAR & SALVAR
                                 </Button>
                             </div>
                         </Form.Item>
