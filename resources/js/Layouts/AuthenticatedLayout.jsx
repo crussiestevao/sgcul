@@ -5,6 +5,7 @@ import {
 import { router, useForm } from '@inertiajs/react';
 import { Breadcrumb, Button, Layout, Menu, theme } from 'antd';
 import { useEffect, useState } from 'react';
+import { FaLowVision } from 'react-icons/fa';
 const { Header, Sider, Content } = Layout;
 
 
@@ -178,7 +179,7 @@ const AuthenticatedLayout = ({ children, user, header, page }) => {
                             }}
                         />
                         <div className='pr-8'>
-                            <Button onClick={() => logout()}>{
+                            <Button icon={<FaLowVision/>} onClick={() => logout()}>{
                                 user.name
                             }
                             </Button>
